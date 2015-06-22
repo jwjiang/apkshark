@@ -7,15 +7,18 @@ import os
 import stat
 import time
 import signal
+import re
 import subprocess
 from subprocess import PIPE, Popen
+
+apk_regex = '.+(.apk)'
 
 def find_names(apkname, namefile):
     name = subprocess.check_output('./package_name.sh ' + apkname, shell=True, universal_newlines=True)
     namefile.write(''.join([apkname, ',', name]))
 
 # more modular - can insert location of aapt
-def find_names3(apkname, namefile):
+def find_names2(apkname, namefile):
     p = subprocess.Popen('echo `/usr/share/android-sdk/sdk/build-tools/android-4.4W/aapt dump badging ' + apkname +
                          ' | grep package | awk \'{print $2}\' | sed s/name=//g | sed s/\\\'//g`', shell=True,
                          stdout=PIPE, universal_newlines=True)
@@ -24,9 +27,11 @@ def find_names3(apkname, namefile):
 
 start_time = time.time()
 
+'''
 # make script file executable
 st = os.stat('package_name.sh')
 os.chmod('package_name.sh', st.st_mode | stat.S_IEXEC)
+'''
 
 # check for path as argument
 if len(sys.argv) < 2:
@@ -41,7 +46,7 @@ else:
 # prompt if directory is correct / continue
 do_continue = ''
 while do_continue != 'y' and do_continue != 'n':
-    do_continue = input('The specified directory is ' + directory + '. Continue? [y/n]')
+    do_continue = raw_input('The specified directory is ' + directory + '. Continue? [y/n]')
 if do_continue == 'n':
     sys.exit()
 
@@ -64,10 +69,9 @@ package_output = open('package_table.csv', 'a')
 count = 0
 print('Sanitizing directory list to exclude non-.apk files and constructing table of package names...')
 for apk_name in apk_list:
-    if apk_name[len(apk_name)-4:] != '.apk':
-        apk_list.remove(apk_name)
-    else:
-        find_names3(apk_name, package_output)
+    regex_match = re.match(apk_regex, apk_name)
+    if regex_match:
+        find_names2(apk_name, package_output)
         count += 1
         if size%1 == 0:
             print(str(count) + '/' + str(size) + ' processed.')

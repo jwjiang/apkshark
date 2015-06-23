@@ -18,8 +18,8 @@ def find_names(apkname, namefile):
     namefile.write(''.join([apkname, ',', name]))
 
 # more modular - can insert location of aapt
-def find_names2(apkname, namefile):
-    p = subprocess.Popen('echo `/usr/share/android-sdk/sdk/build-tools/android-4.4W/aapt dump badging ' + apkname +
+def find_names2(pathname, apkname, namefile):
+    p = subprocess.Popen('echo `/usr/share/android-sdk/sdk/build-tools/android-4.4W/aapt dump badging ' + pathname +
                          ' | grep package | awk \'{print $2}\' | sed s/name=//g | sed s/\\\'//g`', shell=True,
                          stdout=PIPE, universal_newlines=True)
     name = p.communicate()[0]
@@ -71,7 +71,8 @@ print('Sanitizing directory list to exclude non-.apk files and constructing tabl
 for apk_name in apk_list:
     regex_match = re.match(apk_regex, apk_name)
     if regex_match:
-        find_names2(apk_name, package_output)
+        pathname = ''.join([directory, '/', apk_name])
+        find_names2(pathname, apk_name, package_output)
         count += 1
         if size%1 == 0:
             print(str(count) + '/' + str(size) + ' processed.')

@@ -13,6 +13,7 @@ Performs a set of actions on an AVD for each .apk:
    - Uninstall the .apk
 
 Instructions:
+-------------
 
 Install pexpect from https://pexpect.readthedocs.org/en/latest/install.html. It's required for automating communication with adb.
 

@@ -7,13 +7,12 @@ import os
 import time
 import signal
 import threading
-import shutil
 import re
 import subprocess
 import pexpect
 from subprocess import PIPE, Popen
 
-connected = '(List of devices attached)(\\s)+(emulator-5554)(\\s)+(device)'
+connected = '(List of devices attached)(\\s)+(emulator-(\\d)+)(\\s)+(device)'
 package_dict = ''
 
 def get_dict(namefile):
@@ -29,10 +28,10 @@ def uninstall(package_name):
 
 def pull_pcap(apkname, shell):
     # pull the packet capture file
-    download = subprocess.Popen(''.join(['adb pull /sdcard/', apkname[:len(apkname)-4], '.pcap', ' ./captures']), shell=True,
-                                universal_newlines=True)
+    download = subprocess.Popen(''.join(['adb pull /sdcard/', apkname[:len(apkname)-4], '.pcap', ' ./captures']),
+                                shell=True, universal_newlines=True)
     print(''.join([':: adb pull /sdcard/', apkname[:len(apkname)-4], '.pcap', ' ']))
-    time.sleep(30)
+    time.sleep(10)
     shell.sendline('rm /sdcard/*.pcap')
     print(':: rm /sdcard/*.pcap')
     return
@@ -55,11 +54,13 @@ def do_stuff(apkname, package_name):
     time.sleep(1)
 
     # launch app using package name
-    shell.sendline(''.join(['monkey -p ', package_name, ' -c android.intent.category.LAUNCHER 1']))
-    print(''.join([':: ', 'monkey -p ', package_name, ' -c android.intent.category.LAUNCHER 1']))
+    shell.sendline(''.join(['monkey -p ', package_name, ' --pct-majornav 0', ' --throttle 30',
+                            ' -c android.intent.category.LAUNCHER 200']))
+    print(''.join([':: ', 'monkey -p ', package_name, ' --pct-majornav 0', ' --throttle 30',
+                   '-c android.intent.category.LAUNCHER 200']))
 
     # wait some time... ideally use monkey to randomize some interaction here
-    time.sleep(30)
+    time.sleep(60)
 
     # kill tcpdump
     shell.sendline('ps tcpdump')

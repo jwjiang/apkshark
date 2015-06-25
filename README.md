@@ -2,15 +2,21 @@
 scripts using python and android tools to automate collection of packet dumps collected with tcpdump in a sandboxed emulator environment.
 
 apkshark.py:
+-----------
 Searches for .apk files in a given directory and constructs a .csv consisting of the apk files' names and their package names (necessary for launching an app via adb).
 
 monkey.py:
+----------
 Performs a set of actions on an AVD for each .apk:
    - Install the .apk
    - Start tcpdump to capture packets
    - Launch the app using monkey and wait some time for packets to be captured
    - Kill tcpdump and pull the .pcap file off the AVD
    - Uninstall the .apk
+
+whitelist.py:
+-------------
+Creates a whitelist of safe TLDs given a directory of packet captures from apps known to be non-malicious.
 
 Instructions:
 -------------

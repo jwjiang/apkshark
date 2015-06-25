@@ -7,7 +7,9 @@ Searches for .apk files in a given directory and constructs a .csv consisting of
 
 Instructions:
 Edit line 20 of apkshark.py to include the correct location of aapt from the Android SDK build tools.
-Easiest way to use these scripts is to have all the .apk's and the scripts in the same directory. Run apkshark.py using '.' as the directory argument (assuming apk's are in the same directory).
+Easiest way to use these scripts is to have all the .apk's and the scripts in the same directory.
+
+Run apkshark.py using '.' as the directory argument (assuming apk's are in the same directory).
 
 monkey.py:
 ----------
@@ -20,7 +22,10 @@ Performs a set of actions on an AVD for each .apk:
 
 Instructions:
 Install pexpect from https://pexpect.readthedocs.org/en/latest/install.html.
-Edit line 101 of monkey.py to have the correct name of the AVD you will use. For example, if you have an AVD called 'testavd1', the line should be changed to include '-avd testavd1' (the rest should remain unchanged). You can change the time to let the app run before killing it (and tcpdump) in line 63 of monkey.py. Then run monkey.py with 'package_table.csv' (output of apkshark.py) as the argument.
+Edit line 101 of monkey.py to have the correct name of the AVD you will use. For example, if you have an AVD called 'testavd1', the line should be changed to include '-avd testavd1' (the rest should remain unchanged).
+
+You can change the time to let the app run before killing it (and tcpdump) in line 63 of monkey.py.
+Then run monkey.py with 'package_table.csv' (output of apkshark.py) as the argument.
 
 whitelist.py:
 -------------

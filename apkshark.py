@@ -25,12 +25,6 @@ def find_names2(pathname, apkname, namefile):
 
 start_time = time.time()
 
-'''
-# make script file executable
-st = os.stat('package_name.sh')
-os.chmod('package_name.sh', st.st_mode | stat.S_IEXEC)
-'''
-
 # check for path as argument
 if len(sys.argv) < 2:
     print('Please specify the directory of the .apk files')
@@ -74,7 +68,7 @@ for apk_name in apk_list:
         count += 1
         if size%1 == 0:
             print(str(count) + '/' + str(size) + ' processed.')
-print(str(size-count) + ' non-apk files')
+print(str(size-count) + ' non-apk file(s)')
 # save list
 package_output.close()
 

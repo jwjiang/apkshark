@@ -43,20 +43,14 @@ def verify():
         print('Please specify only the directory of the .pcap files')
         sys.exit(-1)
     else:
-        directory = sys.argv[1]
+        namefile = sys.argv[1]
 
-    # prompt if directory is correct / continue
-    do_continue = ''
-    while do_continue != 'y' and do_continue != 'n':
-        do_continue = raw_input('The specified directory is ' + directory + '. Continue? [y/n]')
-    if do_continue == 'n':
-        sys.exit()
-
-    # validate directory
-    if not os.path.isabs(directory):
-        directory = os.path.abspath(directory)
-    if not os.path.isdir(directory):
-        print('Path is invalid.')
+    if not os.path.isabs(namefile):
+        namefile = os.path.abspath(namefile)
+        print(namefile)
+    if not os.path.isfile(namefile):
+        print(namefile)
+        print('File is invalid.')
         sys.exit(-1)
 
 def make_whitelist(pcap_list, size):

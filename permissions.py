@@ -6,6 +6,12 @@ import sys
 import os
 import pexpect
 
+suspicious_permissions = set(['android.permission.INTERNET', 'android.permission.ACCESS_NETWORK_STATE',
+                              'android.permission.CHANGE_NETWORK_STATE',
+                              'android.permission.SEND_SMS', 'android.permission.READ_SMS',
+                              'android.permission.INSTALL_PACKAGES', 'android.permission.KILL_BACKGROUND_PROCESSES',
+                              'android.permission.DOWNLOAD_WITHOUT_NOTIFICATION'])
+
 def verify(namefile=None):
     if namefile is None:
         # check for path as command-line argument
@@ -39,6 +45,7 @@ def verify(namefile=None):
             print(namefile)
             print('File is invalid.')
             sys.exit(-1)
+        return namefile
 
 def get_permissions(apkname):
     command = ''.join(['aapt d permissions ', apkname])
@@ -55,10 +62,16 @@ def get_permissions(apkname):
             permissions[i] = string
         else:
             pass
-    for string in permissions:
-        print string
     return permissions[1:]
 
+# returns true if has permissions that COULD be used maliciously, false if no suspicious permissions
+def check_malicious(apkname):
+    result = verify(namefile=apkname)
+    permissions = get_permissions(result)
+    for item in suspicious_permissions:
+        if item in permissions:
+            return True
+    return False
 
 def main():
     verify()

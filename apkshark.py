@@ -17,7 +17,7 @@ def find_names(apkname, namefile):
 
 # more modular - can insert location of aapt
 def find_names2(pathname, apkname, namefile):
-    p = subprocess.Popen('echo `/usr/share/android-sdk/sdk/build-tools/android-4.4W/aapt dump badging ' + pathname +
+    p = subprocess.Popen('echo `aapt dump badging ' + pathname +
                          ' | grep package | awk \'{print $2}\' | sed s/name=//g | sed s/\\\'//g`', shell=True,
                          stdout=PIPE, universal_newlines=True)
     name = p.communicate()[0]
@@ -49,26 +49,29 @@ if not os.path.isdir(directory):
     print('Path is invalid.')
     sys.exit(-1)
 
-# get list of all files in directory
-apk_list = os.listdir(directory)
-size = len(apk_list)
-if size == 0:
-    print('Directory is empty.')
-    sys.exit(-1)
+# walk directory tree to find all .apks
+apk_list = list()
+for folder, subfolders, filenames in os.walk(directory):
+    for filename in filenames:
+        regex_match = re.match(apk_regex, filename)
+        if regex_match:
+            apk_list.append((''.join([folder, '/', filename]), filename))
 
-# only deal with .apk's and create list of package names
+# create list of package names
 package_output = open('package_table.csv', 'a')
 count = 0
+size = len(apk_list)
+if size == 0:
+    print('No .apk files found')
+    sys.exit()
+stepsize = int(size/200)
 print('Sanitizing directory list to exclude non-.apk files and constructing table of package names...')
-for apk_name in apk_list:
-    regex_match = re.match(apk_regex, apk_name)
-    if regex_match:
-        pathname = ''.join([directory, '/', apk_name])
-        find_names2(pathname, apk_name, package_output)
-        count += 1
-        if size%1 == 0:
-            print(str(count) + '/' + str(size) + ' processed.')
-print(str(size-count) + ' non-apk file(s)')
+for (pathname, apk_name) in apk_list:
+    find_names2(pathname, apk_name, package_output)
+    count += 1
+    if count % stepsize == 0 or count == size:
+        print(str(count) + '/' + str(size) + ' processed.')
+
 # save list
 package_output.close()
 

@@ -40,4 +40,4 @@ permissions.py:
 Generates a list of all the permissions required by a given .apk.
 
 
-readme updated: 25 june 2015
+readme updated: 29 june 2015

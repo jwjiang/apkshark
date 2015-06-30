@@ -21,7 +21,7 @@ def find_names2(pathname, apkname, namefile):
                          ' | grep package | awk \'{print $2}\' | sed s/name=//g | sed s/\\\'//g`', shell=True,
                          stdout=PIPE, universal_newlines=True)
     name = p.communicate()[0]
-    namefile.write(''.join([apkname, ',', name]))
+    namefile.write(''.join([apkname, ',', name, ',', pathname]))
 
 start_time = time.time()
 
@@ -49,7 +49,7 @@ if not os.path.isdir(directory):
     print('Path is invalid.')
     sys.exit(-1)
 
-# walk directory tree to find all .apks
+# walk directory tree to find all .apks and build list
 apk_list = list()
 for folder, subfolders, filenames in os.walk(directory):
     for filename in filenames:
@@ -58,7 +58,6 @@ for folder, subfolders, filenames in os.walk(directory):
             apk_list.append((''.join([folder, '/', filename]), filename))
 
 # create list of package names
-package_output = open('package_table.csv', 'a')
 count = 0
 size = len(apk_list)
 if size == 0:
@@ -66,6 +65,7 @@ if size == 0:
     sys.exit()
 stepsize = int(size/200)
 print('Sanitizing directory list to exclude non-.apk files and constructing table of package names...')
+package_output = open('package_table.csv', 'a+')
 for (pathname, apk_name) in apk_list:
     find_names2(pathname, apk_name, package_output)
     count += 1

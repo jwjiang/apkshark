@@ -36,10 +36,10 @@ def pull_pcap(apkname, shell):
     print(':: rm /sdcard/*.pcap')
     return
 
-def do_stuff(apkname, package_name):
+def do_stuff(apkname, package_name, pathname):
     # installapk = subprocess.Popen(''.join(['adb install ', apkname]), shell=True, universal_newlines=True)
 
-    shell = pexpect.spawn(''.join(['adb install ', apkname]))
+    shell = pexpect.spawn(''.join(['adb install ', pathname]))
     print(''.join([':: adb install ', apkname]))
     # wait for apk to install
     shell.expect('Success\\r\\r\\n', timeout=120)
@@ -118,7 +118,8 @@ def start(namefile):
         array = line.split(',')
         apkname = array[0]
         package_name = array[1].rstrip()
-        do_stuff(apkname, package_name)
+        pathname = array[2]
+        do_stuff(apkname, package_name, pathname)
         '''
         monkeythread = threading.Thread(target=do_stuff(apkname, package_name))
         monkeythread.start()

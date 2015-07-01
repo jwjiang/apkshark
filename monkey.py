@@ -100,6 +100,7 @@ def start(namefile):
     print(startadb.communicate())
     emulator = os.system('/usr/share/android-sdk/sdk/tools/emulator -avd santoku -no-boot-anim &')
 
+
     devices = subprocess.Popen('adb devices', shell=True, universal_newlines=True, stdout=PIPE)
     output = devices.communicate()[0]
     regex_match = re.match(connected, output)
@@ -117,15 +118,17 @@ def start(namefile):
     for line in package_dict:
         array = line.split(',')
         apkname = array[0]
-        package_name = array[1].rstrip()
+        print('apkname: ' + apkname)
+        package_name = array[1]
+        print('pkg name: ' + package_name)
         pathname = array[2]
+        print('pathname: ' + pathname)
         do_stuff(apkname, package_name, pathname)
-        '''
-        monkeythread = threading.Thread(target=do_stuff(apkname, package_name))
+
+        monkeythread = threading.Thread(target=do_stuff(apkname, package_name, pathname))
         monkeythread.start()
         while monkeythread.is_alive():
             time.sleep(0.5)
-        '''
 
 def main():
     # check for path as argument

@@ -17,11 +17,11 @@ def find_names(apkname, namefile):
 
 # more modular - can insert location of aapt
 def find_names2(pathname, apkname, namefile):
-    p = subprocess.Popen('echo `aapt dump badging ' + pathname +
+    p = subprocess.Popen('echo `aapt dump badging ' + '"' + pathname + '"' +
                          ' | grep package | awk \'{print $2}\' | sed s/name=//g | sed s/\\\'//g`', shell=True,
                          stdout=PIPE, universal_newlines=True)
-    name = p.communicate()[0]
-    namefile.write(''.join([apkname, ',', name, ',', pathname]))
+    name = p.communicate()[0].strip()
+    namefile.write(''.join([apkname, ',', name, ',', pathname, '\n']))
 
 start_time = time.time()
 
@@ -64,6 +64,8 @@ if size == 0:
     print('No .apk files found')
     sys.exit()
 stepsize = int(size/200)
+if stepsize == 0:
+    stepsize = 1
 print('Sanitizing directory list to exclude non-.apk files and constructing table of package names...')
 package_output = open('package_table.csv', 'a+')
 for (pathname, apk_name) in apk_list:

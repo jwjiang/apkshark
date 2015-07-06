@@ -63,11 +63,11 @@ size = len(apk_list)
 if size == 0:
     print('No .apk files found')
     sys.exit()
-stepsize = int(size/200)
+stepsize = int(size/100)
 if stepsize == 0:
     stepsize = 1
 print('Sanitizing directory list to exclude non-.apk files and constructing table of package names...')
-package_output = open('package_table.csv', 'a+')
+package_output = open('package_table2.csv', 'a+')
 for (pathname, apk_name) in apk_list:
     find_names2(pathname, apk_name, package_output)
     count += 1

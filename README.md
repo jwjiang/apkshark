@@ -25,7 +25,9 @@ Install pexpect from https://pexpect.readthedocs.org/en/latest/install.html.
 Edit line 101 of monkey.py to have the correct name of the AVD you will use. For example, if you have an AVD called 'testavd1', the line should be changed to include '-avd testavd1' (the rest should remain unchanged).
 
 You can change the time to let the app run before killing it (and tcpdump) in line 63 of monkey.py.
-Then run monkey.py with 'package_table.csv' (output of apkshark.py) as the argument.
+Then run monkey.py with 'package_table.csv' (output of apkshark.py) as the first argument and the directory where the capture
+files should be saved as the second argument.
+   ie: python monkey.py package_table.csv ~/captures/
 
 whitelist.py:
 -------------

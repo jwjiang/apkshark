@@ -1,4 +1,4 @@
-# fun-with-python
+# apkshark
 scripts using python and android tools to automate collection of packet dumps collected with tcpdump in a sandboxed emulator environment.
 
 apkshark.py:
